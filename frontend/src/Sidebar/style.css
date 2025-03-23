@@ -1,0 +1,44 @@
+.sidebar{
+    height: 100vh;
+    width: 10vw;
+    cursor: default;
+    user-select: none;
+}
+.title{
+    font-weight:bold;
+    height: 8%;
+    text-align: center;
+    align-content: center;
+    font-size: 2.2rem;
+    color: #0077ff;
+}
+.list-sidebar{
+    list-style: none;
+}
+
+.side-btn{
+    text-align: start;
+    margin-left: 25%;
+    margin-top: 15%;
+    font-weight: 600;
+    font-weight: 700;
+    cursor: pointer;
+    color: #404040;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+}
+.side-btn-selected{
+    color: #0077ff;
+    text-align: start;
+    margin-left: 25%;
+    margin-top: 15%;
+    font-weight: 600;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+}
