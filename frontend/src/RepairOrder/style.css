@@ -1,0 +1,124 @@
+.container-repair-orders{
+    height: 100vh;
+    width: 85vw;
+    margin-left: 5vw;
+    padding: 0 15px;
+    cursor: default;
+}
+
+.container-head-order{
+    display: flex;
+    justify-content: space-between;
+    height: 8%;
+    margin-right: 7vw;
+    align-items: center;
+
+}
+.title-page{
+    font-size: 20px;
+    color: #0077ff;
+    font-weight: 700;
+    
+}
+.create-button{
+    background-color: #0077ff;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+}
+
+.container-info-orders{
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    height: 8%;
+    margin-right: 5vw;
+}
+.title-info{
+    color: #919191;
+    font-weight: 500;
+}
+.number-info{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+
+.title-table{
+    font-size: 18px;
+    color: black;
+    margin-top: 2%;
+    font-weight: 500;
+}
+
+.table-info{
+    width: 100%;
+    justify-content: center;
+    table-layout: fixed;
+    margin-bottom: 10px;
+    border-spacing: 0 0;
+}
+
+.table-info th{
+    text-align: left;
+    color: #808080;
+    user-select: none;
+}
+.table-info th {
+    padding-top: 10px;
+    padding-bottom: 15px; /* يضيف مسافة فقط بين الصفوف دون التأثير على th */
+}
+.table-info td {
+    padding-bottom: 30px; /* يضيف مسافة فقط بين الصفوف دون التأثير على th */
+}
+.order-id{
+    font-weight: bold;
+}
+
+.phone{
+    font-size: 16px;
+    color: #818181;
+}
+.vehicle-data{
+    font-weight: bold;
+}
+
+.progress{
+    background-color: rgb(198, 220, 253);
+    color: blue;
+    width: fit-content;
+    padding: 2px 8px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    border-radius: 4px;
+}
+
+.pending{
+    background-color: rgb(253, 219, 156);
+    color: rgb(190, 124, 0);
+    width: fit-content;
+    padding: 2px 8px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    border-radius: 4px;
+}
+
+.completed{
+    background-color: rgb(193, 252, 193);
+    color: rgb(0, 107, 0);
+    width: fit-content;
+    padding: 2px 8px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    border-radius: 4px;
+}
+
+.view-btn{
+    color: #0077ff;
+    user-select: none;
+    cursor: pointer;
+}
