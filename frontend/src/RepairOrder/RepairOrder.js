@@ -1,92 +1,76 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import {useNavigate } from "react-router-dom";
+import axios from "axios"
 import "./style.css"
 function RepairOrder() {
+    const navigate = useNavigate();
+    const [activeOrders, setActiveOrders] = useState(0);
+    const [pendingDiagnosis, setPendingDiagnosis] = useState(0);
+    const [completedToday, setCompletedToday] = useState(0);
+    const [totalRevenue, setTotalRevenue] = useState(0);
+    const [dataOrders, setDataOrders] = useState([]);
 
+    useEffect(()=>{
+        axios.get("http://localhost:5000/repair-orders").then((result)=>{
+            setDataOrders(result.data.orders);
+        }).catch((err)=>{
+            console.log(err);
+        });
+    },[]);
 
-
-    const RepairOrderArray = [
-        {
-            "repairId": "RO-2025001",
-            "vehicle": "Hyundai Sonata 2017 Red",
-            "customer": "Yousef Abuaqel",
-            "phoneNumber": "0789991280",
-            "service": "Check Engine",
-            "status": "In Progress",
-            "date": "JAN 15, 2025"
-        },
-        {
-            "repairId": "RO-2025002",
-            "vehicle": "Toyota Corolla 2020 White",
-            "customer": "Ahmad Saleh",
-            "phoneNumber": "0791234567",
-            "service": "Oil Change",
-            "status": "Completed",
-            "date": "FEB 02, 2025"
-        },
-        {
-            "repairId": "RO-2025003",
-            "vehicle": "Honda Civic 2018 Blue",
-            "customer": "Mohammad Ali",
-            "phoneNumber": "0779876543",
-            "service": "Brake Replacement",
-            "status": "Pending",
-            "date": "MAR 10, 2025"
-        },
-        {
-            "repairId": "RO-2025004",
-            "vehicle": "Ford Focus 2019 Black",
-            "customer": "Sara Khalid",
-            "phoneNumber": "0783456789",
-            "service": "Battery Replacement",
-            "status": "In Progress",
-            "date": "APR 05, 2025"
-        },
-        {
-            "repairId": "RO-2025005",
-            "vehicle": "Nissan Altima 2021 Silver",
-            "customer": "Omar Hassan",
-            "phoneNumber": "0798765432",
-            "service": "Tire Alignment",
-            "status": "Completed",
-            "date": "MAY 22, 2025"
-        },
-        {
-            "repairId": "RO-2025006",
-            "vehicle": "Chevrolet Malibu 2016 Gray",
-            "customer": "Layla Ahmad",
-            "phoneNumber": "0772233445",
-            "service": "Transmission Repair",
-            "status": "Pending",
-            "date": "JUN 18, 2025"
-        }
-    ];
-
-
+    useEffect(()=>{
+            calculateData();
+    },[dataOrders]);
     
+    const calculateData = () => {
 
+        let activeCount = 0;
+        let pendingCount = 0;
+        let completedTodayCount = 0;
+        const today = new Date().toLocaleDateString('en-GB');
+        dataOrders.forEach(order => {
+            const formattedDate = new Date(order.estimatedCompletion).toLocaleDateString('en-GB');
+            console.log(formattedDate);
+            
+            if (order.status === "In Progress") {
+                activeCount++;
+            }
 
+            if (order.status === "Pending") {
+                pendingCount++;
+            }
+
+            if (order.status === "Completed" && formattedDate === today) {
+                completedTodayCount++;
+            }
+        });        
+        setActiveOrders(activeCount);
+        setPendingDiagnosis(pendingCount);
+        setCompletedToday(completedTodayCount);
+    };
+    
   return (
     <div className='container-repair-orders'>
 
         <div className='container-head-order'>
             <div className='title-page'>Repair Orders</div>
-            <div className='create-button'>+ New Order</div>
+            <div className='create-button' onClick={()=> navigate("/order/new")}>+ New Order</div>
         </div>
 
         <div className='container-info-orders'>
             <div className='container-card-info-orders'>
                 <div className='title-info'>Active Orders</div>
-                <div className='number-info'>5</div>
+                <div className='number-info'>{activeOrders}</div>
             </div>
 
             <div className='container-card-info-orders'>
                 <div className='title-info'>Pending Diagnosis</div>
-                <div className='number-info'>2</div>
+                <div className='number-info'>{pendingDiagnosis}</div>
             </div>
 
             <div className='container-card-info-orders'>
                 <div className='title-info'>Completed Today</div>
-                <div className='number-info'>9</div>
+                <div className='number-info'>{completedToday}</div>
 
             </div>
 
@@ -116,27 +100,27 @@ function RepairOrder() {
                     <th>DATE</th>
                     <th>ACTION</th>
                 </tr>
-                {RepairOrderArray.map((e,i)=>{
+                {dataOrders.map((e,i)=>{
                     return (
                     <tr>
-                        <td className='order-id'>{e.repairId}</td>
-                        <td className='vehicle-data'>{e.vehicle}</td>
+                        <td className='order-id'>{e.plateNumber}</td>
+                        <td className='vehicle-data'>{e.carMake +" "+ e.carModel +" " + e.year + " " + e.color}</td>
                         <td> 
                             <div>
-                                <div>{e.customer}</div>
+                                <div>{e.ownerName}</div>
                                 <div className='phone'>{e.phoneNumber}</div>
                             </div>
                             
                             </td>
-                        <td className='vehicle-data'>{e.service}</td>
+                        <td className='vehicle-data'>{e.issueDescription}</td>
                         <td>
                             <div className={e.status === "Completed" ? "completed" : e.status === "In Progress" ? "progress" : "pending"}>
                                 {e.status}
                             </div>
                             </td>
-                        <td>{e.date}</td>
+                        <td>{new Date(e.estimatedCompletion).toLocaleDateString('en-GB')}</td>
                         <td >
-                            <span className='view-btn'>View</span></td>
+                            <span className='view-btn' onClick={()=> navigate(`/order/${e._id}`)}>View</span></td>
                     </tr>
                     )
                 })}

@@ -1,4 +1,4 @@
-import React, { useState} from 'react'
+import React, { useEffect, useState} from 'react'
 import "./style.css"
 import { MdSpaceDashboard ,MdPerson , MdDirectionsCar,MdAnalytics, MdWork } from "react-icons/md";
 import { AiFillTool } from "react-icons/ai";
@@ -7,6 +7,13 @@ import {useNavigate} from "react-router-dom";
 function Sidebar() {
     const [selected, setSelected] = useState("dashboard");
     const navigate = useNavigate();
+    useEffect(()=>{
+      if(selected === "dashboard"){
+        navigate("/dashboard");
+      }else if(selected === "repair-orders"){
+        navigate("/repair-orders");
+      }
+    },[selected])
 
   return (
     <div className='sidebar'>

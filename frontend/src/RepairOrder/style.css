@@ -26,8 +26,14 @@
     border-radius: 8px;
     color: white;
     font-weight: 600;
+    cursor: pointer;
+    user-select: none;
 }
 
+.create-button:active{
+    background-color: #0057bb;
+    box-shadow: 1px 1px 2px 1px rgb(83, 83, 83);
+}
 .container-info-orders{
     display: flex;
     justify-content:space-around;
