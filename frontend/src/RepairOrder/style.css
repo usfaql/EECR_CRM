@@ -89,9 +89,30 @@
 .vehicle-data{
     font-weight: bold;
 }
+.received {
+    background-color: #e0f7fa; /* لون سماوي فاتح */
+    color: #00796b; /* لون أخضر داكن */
+    width: fit-content;
+    padding: 2px 8px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    border-radius: 4px;
+}
 
-.progress{
-    background-color: rgb(198, 220, 253);
+.Diagnosed {
+    background-color: #fff59d; /* لون أصفر فاتح */
+    color: #f57f17; /* لون برتقالي داكن */
+    width: fit-content;
+    padding: 2px 8px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    border-radius: 4px;
+}
+
+.progress {
+    background-color: rgb(198, 220, 253); /* لون أزرق فاتح */
     color: blue;
     width: fit-content;
     padding: 2px 8px;
@@ -101,9 +122,9 @@
     border-radius: 4px;
 }
 
-.pending{
-    background-color: rgb(253, 219, 156);
-    color: rgb(190, 124, 0);
+.pending {
+    background-color: rgb(253, 219, 156); /* لون أصفر ذهبي */
+    color: rgb(190, 124, 0); /* لون برتقالي مائل للبني */
     width: fit-content;
     padding: 2px 8px;
     text-align: center;
@@ -112,9 +133,9 @@
     border-radius: 4px;
 }
 
-.completed{
-    background-color: rgb(193, 252, 193);
-    color: rgb(0, 107, 0);
+.completed {
+    background-color: rgb(193, 252, 193); /* لون أخضر فاتح */
+    color: rgb(0, 107, 0); /* لون أخضر داكن */
     width: fit-content;
     padding: 2px 8px;
     text-align: center;

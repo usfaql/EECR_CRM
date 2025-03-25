@@ -9,13 +9,14 @@ function RepairOrder() {
     const [completedToday, setCompletedToday] = useState(0);
     const [totalRevenue, setTotalRevenue] = useState(0);
     const [dataOrders, setDataOrders] = useState([]);
-
+    
     useEffect(()=>{
         axios.get("http://localhost:5000/repair-orders").then((result)=>{
             setDataOrders(result.data.orders);
         }).catch((err)=>{
             console.log(err);
         });
+        
     },[]);
 
     useEffect(()=>{
@@ -29,9 +30,7 @@ function RepairOrder() {
         let completedTodayCount = 0;
         const today = new Date().toLocaleDateString('en-GB');
         dataOrders.forEach(order => {
-            const formattedDate = new Date(order.estimatedCompletion).toLocaleDateString('en-GB');
-            console.log(formattedDate);
-            
+            const formattedDate = new Date(order.estimatedCompletion).toLocaleDateString('en-GB');            
             if (order.status === "In Progress") {
                 activeCount++;
             }
@@ -48,7 +47,9 @@ function RepairOrder() {
         setPendingDiagnosis(pendingCount);
         setCompletedToday(completedTodayCount);
     };
-    
+
+
+
   return (
     <div className='container-repair-orders'>
 
@@ -120,7 +121,7 @@ function RepairOrder() {
                             </td>
                         <td>{new Date(e.estimatedCompletion).toLocaleDateString('en-GB')}</td>
                         <td >
-                            <span className='view-btn' onClick={()=> navigate(`/order/${e._id}`)}>View</span></td>
+                            <span className='view-btn' onClick={()=> navigate(`/order/${e.vin}`)}>View</span></td>
                     </tr>
                     )
                 })}

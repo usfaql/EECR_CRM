@@ -11,7 +11,12 @@ const repairOrderSchema = new mongoose.Schema({
     phoneNumber: { type: String, required: true },
     email: { type: String, required: false },
     issueDescription: { type: String, required: true },
-    assignedTechnician: { type: String, required: false },
+    assignedTechnicians: [
+      {
+        _id : false,
+        technicianId: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+      }
+  ],
     estimatedCompletion: { type: Date, required: false, default: null },
     diagnosis: [{ type: String, default: '' }],  
     partsRequired: [
@@ -33,6 +38,4 @@ const repairOrderSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-const RepairOrder = mongoose.model('RepairOrder', repairOrderSchema);
-
-module.exports = RepairOrder;
+module.exports = mongoose.model('RepairOrder', repairOrderSchema);

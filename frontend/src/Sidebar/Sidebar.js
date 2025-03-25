@@ -5,15 +5,18 @@ import { AiFillTool } from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
 
 function Sidebar() {
-    const [selected, setSelected] = useState("dashboard");
+    const [selected, setSelected] = useState(localStorage.getItem("selectedPage") || "dashboard");
     const navigate = useNavigate();
-    useEffect(()=>{
-      if(selected === "dashboard"){
-        navigate("/dashboard");
-      }else if(selected === "repair-orders"){
-        navigate("/repair-orders");
+
+    useEffect(() => {
+      localStorage.setItem("selectedPage", selected);
+      
+      if (selected === "dashboard") {
+          navigate("/dashboard");
+      } else if (selected === "repair-orders") {
+          navigate("/repair-orders");
       }
-    },[selected])
+  }, [selected, navigate]);
 
   return (
     <div className='sidebar'>

@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const RepairOrder = require('../models/repairOrderSchema');
 
 const createRepairOrder = async (req, res) => {
@@ -41,7 +42,7 @@ const getAllRepairOrders = async (req, res) => {
 const getRepairOrderByVin = async (req, res) => {
     try {
         const { vin } = req.params; 
-        const repairOrder = await RepairOrder.findOne({ vin });
+        const repairOrder = await RepairOrder.findOne({ vin }).populate('assignedTechnicians.technicianId');
 
         if (!repairOrder) {
             return res.status(404).json({ message: 'Repair Order not found for this VIN' });
@@ -56,7 +57,6 @@ const getRepairOrderByVin = async (req, res) => {
         res.status(500).json({success: false, message : "Error Update order Status", error: error.message });
     }
 };
-
 
 const updateRepairOrderStatus = async (req, res) => {
     try {
@@ -177,6 +177,33 @@ const updateRepairOrder = async (req, res) => {
     }
   };
 
+  const updateAssignedTechnicians = async (req, res) => {
+    const { repairOrderId } = req.params;
+    const { technicians } = req.body;
+
+    try {
+        const repairOrder = await RepairOrder.findById(repairOrderId);
+        
+        if (!repairOrder) {
+            return res.status(404).json({ message: 'Repair order not found' });
+        }
+
+        console.log('Technicians received:', technicians);
+
+        repairOrder.assignedTechnicians = technicians.map(id => {
+            console.log("IDDDDDDDDDDDDD =>", id);
+            
+            return { technicianId: id };
+          });
+
+
+        await repairOrder.save();
+        return res.status(200).json({ message: 'Technicians updated successfully' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
  createRepairOrder,
  getAllRepairOrders,
@@ -184,5 +211,6 @@ module.exports = {
  updateRepairOrder,
  updateRepairOrderStatus,
  updateApprovalStatus,
- deleteRepairOrder
+ deleteRepairOrder,
+ updateAssignedTechnicians
 }
