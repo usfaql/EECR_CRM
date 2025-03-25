@@ -180,17 +180,17 @@ function OrderDetails() {
                 </div>
                 <div className='info-vehicle'>
                     <div className='title-order-info'>Make/Model</div>
-                    <div>{repairOrderData?.carMake} {repairOrderData?.carModel} {repairOrderData?.year}</div>
+                    <div>{repairOrderData?.vehicle.carMake} {repairOrderData?.vehicle.carModel} {repairOrderData?.vehicle.year}</div>
                 </div>
                 
                 <div className='info-vehicle'>
                     <div className='title-order-info'>License Plate</div>
-                    <div>{repairOrderData?.plateNumber}</div>
+                    <div>{repairOrderData?.vehicle.plateNumber}</div>
                 </div>
                 
                 <div className='info-vehicle'>
                     <div className='title-order-info'>VIN</div>
-                    <div>{repairOrderData?.vin}</div>
+                    <div>{repairOrderData?.vehicle.vin}</div>
                 </div>
             </div>
             
@@ -202,7 +202,7 @@ function OrderDetails() {
                     <div className='container-name-image'>
                         <RxAvatar size={50}/>
                         <div style={{display:"flex", flexDirection:"column", justifyContent:"center"}}>
-                            <div style={{fontWeight:"bold"}}>{repairOrderData?.ownerName}</div>
+                            <div style={{fontWeight:"bold"}}>{repairOrderData?.vehicle.owner.firstName} {repairOrderData?.vehicle.owner.lastName}</div>
                             <div className='title-order-info'>Owner</div>
                         </div>
                         
@@ -211,7 +211,7 @@ function OrderDetails() {
 
                     <div className='container-phone'>
                     <FaPhoneAlt/>
-                    <div>{repairOrderData?.phoneNumber}</div>
+                    <div>{repairOrderData?.vehicle.owner.phoneNumber}</div>
                     </div>
                     
                 </div>

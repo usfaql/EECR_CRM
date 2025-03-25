@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const repairOrderSchema = new mongoose.Schema({
-    vehicle : {type: mongoose.Schema.Types.ObjectId, ref: "vehicle"},
+    vehicle : {type: mongoose.Schema.Types.ObjectId, ref: 'vehicle'},
     issueDescription: { type: String, required: true },
     assignedTechnicians: [
       {

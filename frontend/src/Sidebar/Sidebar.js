@@ -16,6 +16,9 @@ function Sidebar() {
       } else if (selected === "repair-orders") {
           navigate("/repair-orders");
       }
+      if(selected === "Vehicles"){
+        navigate('/vehicles');
+      }
   }, [selected, navigate]);
 
   return (

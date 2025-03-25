@@ -8,6 +8,7 @@ const vehicleSchema = new mongoose.Schema({
     plateNumber: { type: String, required: true, unique: true },
     vin: { type: String, required: true, unique: true },
     owner : {type : mongoose.Schema.Types.ObjectId, ref : "Customers"},
+    createdAt: { type: Date, default: Date.now }
 
 })
 

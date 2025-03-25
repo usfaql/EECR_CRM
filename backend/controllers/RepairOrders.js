@@ -22,7 +22,13 @@ const createRepairOrder = async (req, res) => {
 
 const getAllRepairOrders = async (req, res) => {
     try {
-        const orders = await RepairOrder.find();
+        const orders = await RepairOrder.find().populate({
+            path: 'vehicle',
+            populate: {
+                path: 'owner', 
+                model: 'Customers'
+            }
+        });
         res.status(200).json({
             success : true,
             message : `All Repair Orders`,
@@ -42,7 +48,14 @@ const getAllRepairOrders = async (req, res) => {
 const getRepairOrderByVin = async (req, res) => {
     try {
         const { vin } = req.params; 
-        const repairOrder = await RepairOrder.findOne({ vin }).populate('assignedTechnicians.technicianId');
+        const repairOrder = await RepairOrder.findOne({ "_id" : vin }).populate('assignedTechnicians.technicianId').populate({
+            path: 'vehicle',
+            populate: {
+                path: 'owner', 
+                model: 'Customers'
+            }
+        });
+        
 
         if (!repairOrder) {
             return res.status(404).json({ message: 'Repair Order not found for this VIN' });

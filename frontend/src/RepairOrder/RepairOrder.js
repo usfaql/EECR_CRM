@@ -104,11 +104,11 @@ function RepairOrder() {
                 {dataOrders.map((e,i)=>{
                     return (
                     <tr>
-                        <td className='order-id'>{e.plateNumber}</td>
-                        <td className='vehicle-data'>{e.carMake +" "+ e.carModel +" " + e.year + " " + e.color}</td>
+                        <td className='order-id'>{e.vehicle.plateNumber}</td>
+                        <td className='vehicle-data'>{e.vehicle.carMake +" "+ e.vehicle.carModel +" " + e.vehicle.year + " " + e.vehicle.color}</td>
                         <td> 
                             <div>
-                                <div>{e.ownerName}</div>
+                                <div>{e.vehicle.owner.firstName} {e.vehicle.owner.lastName}</div>
                                 <div className='phone'>{e.phoneNumber}</div>
                             </div>
                             
@@ -121,7 +121,7 @@ function RepairOrder() {
                             </td>
                         <td>{new Date(e.estimatedCompletion).toLocaleDateString('en-GB')}</td>
                         <td >
-                            <span className='view-btn' onClick={()=> navigate(`/order/${e.vin}`)}>View</span></td>
+                            <span className='view-btn' onClick={()=> navigate(`/order/${e._id}`)}>View</span></td>
                     </tr>
                     )
                 })}
