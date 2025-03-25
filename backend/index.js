@@ -7,11 +7,13 @@ require("./models/db");
 
 const employeesRouter = require("./routes/Employees");
 const repairRouters = require("./routes/RepairOrders");
-
+const customersRouters = require("./routes/Customers");
 app.use(cors());
 app.use(express.json());
 app.use("/employees", employeesRouter);
 app.use('/repair-orders', repairRouters)
+app.use('/customers', customersRouters);
+
 app.listen(PORT, () =>{
     console.log(`http://localhost:${PORT} is live `)
 })

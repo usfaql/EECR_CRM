@@ -21,8 +21,9 @@ function OrderDetails() {
     const [nextStep, setNextStep] = useState('');
     const [markButton, setMarkButton] = useState("Loading...");
     const [techniciansList, setTechniciansList] = useState([]);
-    const [selectedTechnicians, setSelectedTechnicians] = useState(repairOrderData?.assignedTechnicians || []);
-    const [showTechnicianModal, setShowTechnicianModal] = useState(false);
+
+    const [showTechnicianDropdown, setShowTechnicianDropdown] = useState(false);
+    const [selectedTechnicians, setSelectedTechnicians] = useState([]);
 
     useEffect(()=>{
         axios.get(`http://localhost:5000/repair-orders/vin/${vinID}`).then((result) => {
@@ -31,6 +32,9 @@ function OrderDetails() {
             setRepairOrderData(result.data.repairOrder);
             setNextStep(result.data.repairOrder.status);
             setOrderID(result.data.repairOrder._id);
+            setSelectedTechnicians(result.data.repairOrder.assignedTechnicians);
+            console.log('result.data.repairOrder.assignedTechnicians =>', result.data.repairOrder.assignedTechnicians);
+            
         }).catch((err) => {
             console.log(err);
             
@@ -46,6 +50,17 @@ function OrderDetails() {
 
     },[]);
 
+    const addAndRemoveTechnicians = (newTechnicians) => {
+        const newTechnicianId = newTechnicians._id;
+        const exists = selectedTechnicians.some(obj => obj.technicianId._id === newTechnicianId);
+        if (!exists) {
+            selectedTechnicians.push({ technicianId: newTechnicians });
+        } else {
+            // Remove the technician
+            const index = selectedTechnicians.findIndex(obj => obj.technicianId._id === newTechnicianId);
+            selectedTechnicians.splice(index, 1);
+        }
+    };
 
     useEffect(() => {
         if (nextStep === "received") {
@@ -78,24 +93,6 @@ function OrderDetails() {
             setProgress(100); 
         }
     }, [nextStep]);
-        
-        
-    const handleTechnicianSelection = (e) => {
-        const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
-        setSelectedTechnicians(selectedValues);
-    };
-
-    const updateTechnicians = () => {
-        console.log("selectedTechnicians =>", selectedTechnicians);
-        
-        axios.put(`http://localhost:5000/repair-orders/${repairOrderData._id}/assignedTechnicians`, { technicians: selectedTechnicians })
-            .then(response => {
-                console.log('Technicians updated successfully');
-            })
-            .catch(error => console.error('Error updating technicians', error));
-    };
-    
-
 
     const MarkButtonFnc = () => {
         if (markButton === "Start Diagnosis" && progress === 1) {
@@ -138,6 +135,20 @@ function OrderDetails() {
         "default": "pending"
     };
     const currentClass = stepClasses[nextStep] || stepClasses["default"];
+
+    const updateTechnicians = async (newTechnicians) => {
+        addAndRemoveTechnicians(newTechnicians);
+        try {
+            const response = await axios.put(`http://localhost:5000/repair-orders/${repairOrderData._id}/assignedTechnicians`, {
+                technicians: newTechnicians,
+            });
+            setShowTechnicianDropdown(false);
+            console.log("Technicians updated successfully:", response.data);
+        } catch (error) {
+            console.error("Error updating technicians:", error);
+        }
+    };
+
   return (
     <div className='container-repair-details'>
 
@@ -165,7 +176,7 @@ function OrderDetails() {
                 
                 <div className='info-vehicle'>
                     <div className='title-order-info'>issue Description</div>
-                    <div>{repairOrderData?.issueDescription}</div>
+                    <div style={{color:"red"}}>{repairOrderData?.issueDescription}</div>
                 </div>
                 <div className='info-vehicle'>
                     <div className='title-order-info'>Make/Model</div>
@@ -217,7 +228,7 @@ function OrderDetails() {
                     </div>
                     <div className='container-card-issue'>
 
-                        {repairOrderData?.diagnosis.map((e,i)=>{
+                        {repairOrderData?.length > 0 ? repairOrderData?.diagnosis.map((e,i)=>{
                             return(<>
                                 <div className='issues-card-high'>
                                     <div style={{display:"flex", alignItems:"center", gap:"5px"}}>
@@ -228,7 +239,7 @@ function OrderDetails() {
                                     <div className='description-issue-high'>Front Brake Pads worn below minimum</div>
                                 </div>
                             </>)
-                        })}
+                        }) : <div className='issues-card-medium' style={{fontWeight:"bold", display:"inline", textAlign:"center"}}> <IoAlert size={20} color='orange' /> Not yet diagnosed</div>}
 
                         {/*
                         <div className='issues-card-medium'>
@@ -287,44 +298,56 @@ function OrderDetails() {
 
             <div className='container-technician-documents'>
                 <div className='card-assigned-technician'>
-                    <div className='title-card'>Assigned Technician</div>
-                    <div className='container-technician' onClick={() => setShowTechnicianModal(true)}>
-                <RxAvatar size={48} />
-                <div>
-                    <div className='employee-name'>{repairOrderData?.assignedTechnicians?.map(t => t.technicianName).join(', ')}</div>
-                    <div className='position'>Supervisor</div>
-                </div>
-            </div>
-                </div>
-            {showTechnicianModal && (
-                <div className='technician-modal'>
-                    <div className='modal-header'>
-                        <h3>Select Technicians</h3>
-                        <button onClick={() => setShowTechnicianModal(false)}>Close</button>
+                    <div style={{display :"flex", justifyContent:"space-between"}}>
+                        <div className='title-card'>Assigned Technician</div>
+                        <button 
+                            className="dropdown-toggle" 
+                            onClick={() => setShowTechnicianDropdown(prev => !prev)}
+                        >
+                            ▼
+                        </button>
                     </div>
-                    <div className='modal-body'>
-                    <select
-                        value={selectedTechnicians}
-                        onChange={handleTechnicianSelection} 
-                        multiple  
-                        className="technician-select"
-                    >
-                        {techniciansList.map(tech => (
-                            <option key={tech._id} value={tech._id}>
-                                <div style={{'display':"flex", "flexDirection": "column"}}>
-                                    <div>{tech.FirstName} {tech.LastName}</div>
-                                    <div>{tech.role}</div>
+                    
+                    <div className='container-technician'>
+                        {selectedTechnicians?.length > 0 ? selectedTechnicians?.map((e,i)=>{
+                            console.log(selectedTechnicians);
+                            
+                            return(
+                                <div style={{display:"flex", gap:"5px", alignItems:"center"}}>
+                                <img src={e.technicianId.image} style={{width:"48px", borderRadius:"50%", border:"2px solid #0077ff"}} />
+                                <div>
+                                    <div className='employee-name'>
+                                         {e.technicianId.FirstName+ " " +e.technicianId.LastName}
+                                    </div>
+                                    <div className='position'>{e.technicianId.role}</div>
                                 </div>
-                            </option>
-                        ))}
-                    </select>
-
-                    </div>
-                    <div className='modal-footer'>
-                        <button onClick={updateTechnicians}>Save</button>
+                                </div>
+                            )
+                        }) : "No technician assigned" }
                     </div>
                 </div>
-            )}
+            
+            
+            
+                {showTechnicianDropdown && (
+                    <div className='technician-dropdown'>
+                        <div className='title-dropdown'>Select Employee</div>
+                        <ul>
+                            {techniciansList.map(tech => (
+                                <>
+                                <li key={tech._id} onClick={() => updateTechnicians(tech)}>
+                                    <img src={tech.image} style={{width:"48px", borderRadius:"50%", border:"2px solid #0077ff"}}  />
+                                    <div style={{ display: "flex", flexDirection: "column" }}>
+                                        <div>{tech.FirstName} {tech.LastName}</div>
+                                        <div style={{fontWeight:"normal", color:"gray"}}>{tech.role}</div>
+                                    </div>
+                                    {selectedTechnicians.some(t => t.technicianId === tech._id) && <span>✓</span>}
+                                </li>
+                                </>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
                 <div className='card-documents'>
                     <div className='title-card'>Documents</div>

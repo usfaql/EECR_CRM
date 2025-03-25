@@ -177,29 +177,34 @@ const updateRepairOrder = async (req, res) => {
     }
   };
 
+
   const updateAssignedTechnicians = async (req, res) => {
     const { repairOrderId } = req.params;
-    const { technicians } = req.body;
+    const { technicians } = req.body; // This should be an array of IDs
 
     try {
+        // Find the repair order using the repairOrderId
         const repairOrder = await RepairOrder.findById(repairOrderId);
         
         if (!repairOrder) {
             return res.status(404).json({ message: 'Repair order not found' });
         }
-
-        console.log('Technicians received:', technicians);
-
-        repairOrder.assignedTechnicians = technicians.map(id => {
-            console.log("IDDDDDDDDDDDDD =>", id);
-            
-            return { technicianId: id };
-          });
-
-
+        const currentTechnicianIds = repairOrder.assignedTechnicians
+        
+        const technicianObjectId = new mongoose.Types.ObjectId(technicians._id);
+        const exist = currentTechnicianIds.some(obj => obj.technicianId.equals(technicianObjectId))
+        if(!exist){
+            //add obj in currentTechnicianIds
+            currentTechnicianIds.push({technicianId : technicianObjectId})
+        }else{
+            //delete obj in currentTechnicianIds
+            repairOrder.assignedTechnicians = currentTechnicianIds.filter(obj => !obj.technicianId.equals(technicianObjectId));
+        }
         await repairOrder.save();
-        return res.status(200).json({ message: 'Technicians updated successfully' });
+        
+       return res.status(200).json({ message: 'Technicians updated successfully' });
     } catch (error) {
+        console.error('Error updating technicians:', error);
         return res.status(500).json({ message: error.message });
     }
 };

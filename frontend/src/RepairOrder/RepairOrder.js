@@ -115,7 +115,7 @@ function RepairOrder() {
                             </td>
                         <td className='vehicle-data'>{e.issueDescription}</td>
                         <td>
-                            <div className={e.status === "Completed" ? "completed" : e.status === "In Progress" ? "progress" : "pending"}>
+                            <div className={e.status === "Diagnosed" ? "Diagnosed" : e.status === "Finish" ? "completed" : e.status === "In Diagnosis" ? "in-diagnosis" : e.status === "In Repair" ? "in-repair" : e.status === "Repaired" ? "repaired" : e.status === "Need Attention" ? "attention" : "received"}>
                                 {e.status}
                             </div>
                             </td>

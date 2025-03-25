@@ -1,15 +1,7 @@
 const mongoose = require('mongoose');
 
 const repairOrderSchema = new mongoose.Schema({
-    carMake: { type: String, required: true },
-    carModel: { type: String, required: true },
-    year: { type: Number, required: true },
-    color: { type: String, required: true },
-    plateNumber: { type: String, required: true, unique: true },
-    vin: { type: String, required: true, unique: true },
-    ownerName: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
-    email: { type: String, required: false },
+    vehicle : {type: mongoose.Schema.Types.ObjectId, ref: "vehicle"},
     issueDescription: { type: String, required: true },
     assignedTechnicians: [
       {
@@ -32,8 +24,8 @@ const repairOrderSchema = new mongoose.Schema({
     profit: { type: Number, default: 0 },
     status: { 
         type: String, 
-        enum: ['Pending', 'In Progress', 'Completed', 'Cancelled'], 
-        default: 'Pending' 
+        enum: ['received', 'In Diagnosis', 'Diagnosed', 'In Repair', 'Repaired', 'Need Attention', 'Finish'], 
+        default: 'received' 
     },
     createdAt: { type: Date, default: Date.now }
 });
